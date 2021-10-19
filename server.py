@@ -42,9 +42,28 @@ def home():
                 flash('An error occurred, try again.')
                 return redirect(request.url)
 
+@app.route('/predict/<filename>', methods=['GET'])
+def predict(filename):
+    # TODO: Logic to load the uploaded image filename and predict the
+    # labels
+
+    return render_template('predict.html')
+
+@app.errorhandler(500)
+def server_error(error):
+    return render_template('error.html'), 500
+
 @app.route('/images/<filename>', methods=['GET'])
 def images(filename):
     return send_file(os.path.join('/tmp/', filename))
+
+ALLOWED_EXTENSIONS = set(['png', 'bmp', 'jpg', 'jpeg', 'gif'])
+
+def is_allowed_file(filename):
+    """ Checks if a filename's extension is acceptable """
+    allowed_ext = filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and allowed_ext
+
 
 if __name__ == "__main__":
     app.run('127.0.0.1')
